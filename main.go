@@ -15,8 +15,7 @@ const (
 func main() {
 	seedDB()
 	e := echo.New()
-	e.GET("/menu/food", getFoodMenu)
-	e.GET("/menu/drinks", getDrinksMenu)
+	e.GET("/menu", getMenu)
 	e.Logger.Fatal(e.Start(":14045"))
 
 }
@@ -84,20 +83,9 @@ func seedDB() {
 
 }
 
-func getFoodMenu(c echo.Context) error {
-	db, err := gorm.Open(postgres.Open(dbAddress), &gorm.Config{})
-	if err != nil {
-		panic(err)
-	}
-	var menuData []MenuItem
+func getMenu(c echo.Context) error {
+	menuType := c.FormValue("menu_type")
 
-	db.Where(MenuItem{Type: MenuTypeFood}).Find(&menuData)
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"data": menuData,
-	})
-}
-
-func getDrinksMenu(c echo.Context) error {
 	db, err := gorm.Open(postgres.Open(dbAddress))
 	if err != nil {
 		panic(err)
@@ -105,7 +93,7 @@ func getDrinksMenu(c echo.Context) error {
 
 	var menuData []MenuItem
 
-	db.Where(MenuItem{Type: MenuTypeDrinks}).Find(&menuData)
+	db.Where(MenuItem{Type: MenuType(menuType)}).Find(&menuData)
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"data": menuData,
 	})
