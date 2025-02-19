@@ -3,6 +3,7 @@ module restaurant-app
 go 1.21.6
 
 require (
+	github.com/google/uuid v1.6.0
 	github.com/labstack/echo/v4 v4.13.3
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/gorm v1.25.12
